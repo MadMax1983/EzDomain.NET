@@ -1,8 +1,10 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace EzDomain.EventSourcing.Exceptions
 {
+    [ExcludeFromCodeCoverage]
     [Serializable]
     public class AggregateRootVersionException
         : Exception
