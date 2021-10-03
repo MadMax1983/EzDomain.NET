@@ -1,7 +1,7 @@
 using System;
 using EzDomain.EventSourcing.Domain.Model;
 
-namespace EzDomain.EventSourcing.TestApp.Events
+namespace EzDomain.EventSourcing.TestApp.EventSourcing.Events
 {
     [Serializable]
     public abstract class AddressChanged
