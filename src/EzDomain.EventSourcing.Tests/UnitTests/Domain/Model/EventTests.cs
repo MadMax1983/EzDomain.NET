@@ -5,7 +5,7 @@ using EzDomain.EventSourcing.Tests.TestDoubles;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace EzDomain.EventSourcing.Tests.UnitTests.Abstraction
+namespace EzDomain.EventSourcing.Tests.UnitTests.Domain.Model
 {
     [TestFixture]
     public sealed class EventTests

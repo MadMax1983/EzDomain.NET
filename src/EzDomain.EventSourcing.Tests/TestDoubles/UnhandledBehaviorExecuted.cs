@@ -4,10 +4,10 @@ using EzDomain.EventSourcing.Domain.Model;
 namespace EzDomain.EventSourcing.Tests.TestDoubles
 {
     [ExcludeFromCodeCoverage]
-    public sealed class BehaviorExecuted
+    internal sealed class UnhandledBehaviorExecuted
         : Event
     {
-        public BehaviorExecuted(string aggregateRootId)
+        public UnhandledBehaviorExecuted(string aggregateRootId)
             : base(aggregateRootId)
         {
         }

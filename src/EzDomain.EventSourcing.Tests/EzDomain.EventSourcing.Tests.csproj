@@ -15,10 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UnitTests" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\EzDomain.EventSourcing\EzDomain.EventSourcing.csproj" />
     </ItemGroup>
 

@@ -1,7 +1,7 @@
 using System;
 using EzDomain.EventSourcing.Exceptions;
 
-namespace EzDomain.EventSourcing.Abstraction
+namespace EzDomain.EventSourcing.Domain.Model
 {
     /// <summary>
     /// Base class for domain events created by an aggregate root.
