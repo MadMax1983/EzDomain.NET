@@ -36,7 +36,7 @@ namespace EzDomain.EventSourcing.Domain.Model
         protected AggregateRoot(TId id)
             : this()
         {
-            Id = id ?? throw new ArgumentNullException(nameof(id));
+            Id = id;
         }
 
         [SuppressMessage("ReSharper", "JoinNullCheckWithUsage", Justification = "Left with if statement for readability")]

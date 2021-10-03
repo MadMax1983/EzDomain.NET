@@ -13,7 +13,6 @@ namespace EzDomain.EventSourcing.Tests.UnitTests.Domain.Model
     [TestFixture]
     public sealed class AggregateRootTests
     {
-        // TODO: Add test that will check exception if Id is null.
         [Test]
         [AutoData]
         public void GIVEN_serialized_aggregate_root_id_WHEN_instantiating_aggregate_root_THEN_initializes_aggregate_root_with_correct_state(string serializedAggregateRootId)
@@ -127,7 +126,7 @@ namespace EzDomain.EventSourcing.Tests.UnitTests.Domain.Model
 
             var aggregateRootId = new TestAggregateRootId(serializedAggregateRootId);
             var aggregateRoot = new TestAggregateRoot(aggregateRootId);
-            var aggregateRootBehavior = (IAggregateRootBehavior) aggregateRoot;
+            var aggregateRootBehavior = (IAggregateRootBehavior)aggregateRoot;
 
             // Act
             aggregateRoot.ExecuteBehavior();
@@ -177,7 +176,7 @@ namespace EzDomain.EventSourcing.Tests.UnitTests.Domain.Model
 
         [Test]
         [AutoData]
-        public void GIVEN_event_without_aggregate_root_event_handler_implemented_WHEN_processing_event_within_aggregate_THEN_throws_Exception(string serializedAggregateRootId)
+        public void GIVEN_event_without_aggregate_root_event_handler_implemented_WHEN_processing_event_within_aggregate_root_THEN_throws_MissingMethodException(string serializedAggregateRootId)
         {
             // Arrange
             var aggregateRootId = new TestAggregateRootId(serializedAggregateRootId);
@@ -188,12 +187,12 @@ namespace EzDomain.EventSourcing.Tests.UnitTests.Domain.Model
             
             // Assert
             act.Should()
-               .Throw<Exception>();
+               .Throw<MissingMethodException>();
         }
 
         [Test]
         [AutoData]
-        public void GIVEN_aggregate_root_id_WHEN_aggregate_root_is_already_initialized_THEN_throws_AggregateRootIdException(string serializedAggregateRootId)
+        public void GIVEN_aggregate_root_id_WHEN_aggregate_root_id_is_already_initialized_THEN_throws_AggregateRootIdException(string serializedAggregateRootId)
         {
             // Arrange
             var aggregateRootId = new TestAggregateRootId(serializedAggregateRootId);
