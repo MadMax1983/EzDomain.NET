@@ -112,7 +112,7 @@ namespace EzDomain.EventSourcing.Domain.Model
 
         protected void ApplyChange(Event @event)
         {
-            if (@event == null)
+            if (@event is null)
             {
                 throw new EventNullException(nameof(@event));
             }
