@@ -43,7 +43,7 @@ namespace EzDomain.EventSourcing.Domain.Repositories
 
         public virtual async Task SaveAsync(TAggregateRoot aggregateRoot, string metadata = default, CancellationToken cancellationToken = default)
         {
-            if (aggregateRoot == null)
+            if (aggregateRoot is null)
             {
                 throw new AggregateRootNullException(nameof(aggregateRoot));
             }

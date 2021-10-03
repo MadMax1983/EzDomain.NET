@@ -1,6 +1,6 @@
 using System;
 
-namespace EzDomain.EventSourcing.TestApp.Events
+namespace EzDomain.EventSourcing.TestApp.EventSourcing.Events
 {
     [Serializable]
     public sealed class DeliveryAddressChanged
