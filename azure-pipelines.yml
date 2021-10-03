@@ -20,20 +20,36 @@ variables:
 name: 2.0$(rev:.r)
 
 steps:
-- task: NuGetToolInstaller@1
-
+- script: echo '$(Build.BuildNumber)'
 - task: NuGetCommand@2
+  displayName: 'Run Restore'
   inputs:
-    restoreSolution: '$(solution)'
-
-- task: VSBuild@1
+    command: 'restore'
+    projects: |
+      src/EzDomain.EventSourcing/EzDomain.EventSourcing.csproj
+      src/EzDomain.EventSourcing.Tests/EzDomain.EventSourcing.Tests.csproj
+- task: DotNetCoreCLI@2
+  displayName: 'Run Build'
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-- task: VSTest@2
+    command: 'build'
+    projects: src/EzDomain.EventSourcing/EzDomain.EventSourcing.csproj
+    arguments: --configuration $(BuildConfiguration)
+- task: DotNetCoreCLI@2
+  displayName: 'Run Unit Tests'
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    command: 'test'
+    projects: 'src/EzDomain.EventSourcing.Tests/EzDomain.EventSourcing.Tests.csproj'
+    arguments: --configuration $(BuildConfiguration)
+- task: DotNetCoreCLI@2
+  displayName: 'NuGet Pack'
+  inputs:
+    command: 'pack'
+    packagesToPack: 'src/EzDomain.EventSourcing/EzDomain.EventSourcing.csproj'
+    packDirectory: 'src/EzDomain.EventSourcing/bin/$(BuildConfiguration)/netstandard2.0'
+    versioningScheme: 'byBuildNumber'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifacts'
+  inputs:
+    PathtoPublish: 'src/EzDomain.EventSourcing/bin/$(BuildConfiguration)/netstandard2.0'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
