@@ -41,7 +41,7 @@ namespace EzDomain.EventSourcing.Tests.UnitTests.Domain.Repositories
 
             _mockEventStore
                 .Setup(m => m.GetByAggregateRootIdAsync(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((string aggregateRootId, long fromVersion, CancellationToken cancellationToken) =>
+                .ReturnsAsync((string aggregateRootId, long fromVersion, CancellationToken _) =>
                     _events
                         .Where(e => e.AggregateRootId == aggregateRootId && e.Version > fromVersion)
                         .OrderBy(e => e.Version)
@@ -49,7 +49,7 @@ namespace EzDomain.EventSourcing.Tests.UnitTests.Domain.Repositories
 
             _mockEventStore
                 .Setup(m => m.SaveAsync(It.IsAny<IReadOnlyCollection<Event>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Returns((IReadOnlyCollection<Event> events, string metadata, CancellationToken cancellationToken) =>
+                .Returns((IReadOnlyCollection<Event> events, string _, CancellationToken _) =>
                 {
                     foreach (var @event in events)
                     {
@@ -123,8 +123,9 @@ namespace EzDomain.EventSourcing.Tests.UnitTests.Domain.Repositories
             Func<Task> act = async () => await repository.SaveAsync(null);
 
             // Assert
-            await act.Should()
-               .ThrowAsync<AggregateRootNullException>();
+            await act
+                .Should()
+                .ThrowAsync<AggregateRootNullException>();
 
             _mockEventStore.Verify(m => m.SaveAsync(It.IsAny<IReadOnlyCollection<Event>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never());
         }
@@ -152,7 +153,7 @@ namespace EzDomain.EventSourcing.Tests.UnitTests.Domain.Repositories
 
         [Test]
         [AutoData]
-        public async Task GIVEN_changed_aggregate_root_WHEN_attempting_to_save_THEN_saves_aggregate_root(string serializedAggregateRootId)
+        public async Task GIVEN_changed_aggregate_root_WHEN_attempting_to_save_THEN_saves_aggregate_root_new_events(string serializedAggregateRootId)
         {
             // Arrange
             var repository = new TestRepository(_mockFactory.Object, _mockEventStore.Object);
