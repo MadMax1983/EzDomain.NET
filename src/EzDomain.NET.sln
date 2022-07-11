@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventSourcing", "EventSourcing", "{8318F54C-CB81-4F0A-B3D1-B753F3CFA122}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EzDomain.EventSourcing", "EventSourcing\EzDomain.EventSourcing\EzDomain.EventSourcing.csproj", "{CE219474-8C42-4E17-AD98-4650F6AC8A5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EzDomain.EventSourcing.Tests", "EventSourcing\EzDomain.EventSourcing.Tests\EzDomain.EventSourcing.Tests.csproj", "{85BC6537-FC05-434D-951A-25854382B81E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EzDomain.EventSourcing.TestApp", "EventSourcing\EzDomain.EventSourcing.TestApp\EzDomain.EventSourcing.TestApp.csproj", "{343D6B50-3DCB-45AF-8E62-C2D990DDC87F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messaging", "Messaging", "{FF4EB7EC-B3CD-48F7-ADAB-42A3CCFD491A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CE219474-8C42-4E17-AD98-4650F6AC8A5A} = {8318F54C-CB81-4F0A-B3D1-B753F3CFA122}
+		{85BC6537-FC05-434D-951A-25854382B81E} = {8318F54C-CB81-4F0A-B3D1-B753F3CFA122}
+		{343D6B50-3DCB-45AF-8E62-C2D990DDC87F} = {8318F54C-CB81-4F0A-B3D1-B753F3CFA122}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CE219474-8C42-4E17-AD98-4650F6AC8A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE219474-8C42-4E17-AD98-4650F6AC8A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE219474-8C42-4E17-AD98-4650F6AC8A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE219474-8C42-4E17-AD98-4650F6AC8A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85BC6537-FC05-434D-951A-25854382B81E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85BC6537-FC05-434D-951A-25854382B81E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85BC6537-FC05-434D-951A-25854382B81E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85BC6537-FC05-434D-951A-25854382B81E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{343D6B50-3DCB-45AF-8E62-C2D990DDC87F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{343D6B50-3DCB-45AF-8E62-C2D990DDC87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{343D6B50-3DCB-45AF-8E62-C2D990DDC87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{343D6B50-3DCB-45AF-8E62-C2D990DDC87F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
