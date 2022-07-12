@@ -39,6 +39,7 @@ namespace EzDomain.EventSourcing.EventStores.InMemory
             catch (Exception ex)
             {
                 var eventsToDelete = Store.Where(x => x.Key.TransactionId == transactionId);
+
                 foreach (var eventToDelete in eventsToDelete)
                 {
                     Store.Remove(eventToDelete.Key);

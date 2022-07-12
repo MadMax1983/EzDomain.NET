@@ -26,8 +26,7 @@ public sealed class InMemoryEventStoreTests
         {
             CreateAggregateRoot(aggregateRootId, 0)
         };
-
-
+        
         var eventStream2 = new List<Event>
         {
             CreateAggregateRoot(aggregateRootId, 1),
@@ -62,8 +61,7 @@ public sealed class InMemoryEventStoreTests
         var eventStore = new InMemoryEventStore();
 
         var aggregateRootId = Guid.NewGuid().ToString();
-
-
+        
         var eventStream = new List<Event>
         {
             CreateAggregateRoot(aggregateRootId, 0),
@@ -96,8 +94,7 @@ public sealed class InMemoryEventStoreTests
         var eventStore = new InMemoryEventStore();
 
         var aggregateRootId = Guid.NewGuid().ToString();
-
-
+        
         var eventStream = new List<Event>
         {
             CreateAggregateRoot(aggregateRootId, 0),
@@ -125,8 +122,7 @@ public sealed class InMemoryEventStoreTests
         var eventStore2 = new InMemoryEventStore();
 
         var aggregateRootId = Guid.NewGuid().ToString();
-
-
+        
         var eventStream = new List<Event>
         {
             CreateAggregateRoot(aggregateRootId, 0),
