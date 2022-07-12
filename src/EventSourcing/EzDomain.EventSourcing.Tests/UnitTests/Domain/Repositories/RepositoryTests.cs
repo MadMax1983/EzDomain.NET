@@ -13,165 +13,164 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 
-namespace EzDomain.EventSourcing.Tests.UnitTests.Domain.Repositories
+namespace EzDomain.EventSourcing.Tests.UnitTests.Domain.Repositories;
+
+[TestFixture]
+public sealed class RepositoryTests
 {
-    [TestFixture]
-    public sealed class RepositoryTests
+    private readonly string _aggregateRootIdValue = Guid.NewGuid().ToString();
+
+    private readonly ICollection<Event> _events = new List<Event>();
+
+    private readonly Mock<ITestAggregateRoot> _mockAggregateRoot = new();
+    private readonly Mock<IAggregateRootFactory<ITestAggregateRoot, IAggregateRootId>> _mockFactory = new();
+    private readonly Mock<IEventStore> _mockEventStore = new();
+
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
     {
-        private readonly string _aggregateRootIdValue = Guid.NewGuid().ToString();
+        _mockAggregateRoot.As<IAggregateRootBehavior>();
 
-        private readonly ICollection<Event> _events = new List<Event>();
+        _mockAggregateRoot
+            .SetupGet(m => m.Id)
+            .Returns(new TestAggregateRootId(_aggregateRootIdValue));
 
-        private readonly Mock<ITestAggregateRoot> _mockAggregateRoot = new();
-        private readonly Mock<IAggregateRootFactory<ITestAggregateRoot, IAggregateRootId>> _mockFactory = new();
-        private readonly Mock<IEventStore> _mockEventStore = new();
+        _mockFactory
+            .Setup(m => m.Create())
+            .Returns(() => _mockAggregateRoot.Object);
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            _mockAggregateRoot.As<IAggregateRootBehavior>();
+        _mockEventStore
+            .Setup(m => m.GetByAggregateRootIdAsync(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((string aggregateRootId, long fromVersion, CancellationToken _) =>
+                _events
+                    .Where(e => e.AggregateRootId == aggregateRootId && e.Version > fromVersion)
+                    .OrderBy(e => e.Version)
+                    .ToList());
 
-            _mockAggregateRoot
-                .SetupGet(m => m.Id)
-                .Returns(new TestAggregateRootId(_aggregateRootIdValue));
-
-            _mockFactory
-                .Setup(m => m.Create())
-                .Returns(() => _mockAggregateRoot.Object);
-
-            _mockEventStore
-                .Setup(m => m.GetByAggregateRootIdAsync(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((string aggregateRootId, long fromVersion, CancellationToken _) =>
-                    _events
-                        .Where(e => e.AggregateRootId == aggregateRootId && e.Version > fromVersion)
-                        .OrderBy(e => e.Version)
-                        .ToList());
-
-            _mockEventStore
-                .Setup(m => m.SaveAsync(It.IsAny<IReadOnlyCollection<Event>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Returns((IReadOnlyCollection<Event> events, string _, CancellationToken _) =>
-                {
-                    foreach (var @event in events)
-                    {
-                        _events.Add(@event);
-                    }
-
-                    return Task.FromResult(0);
-                });
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            var version = Constants.InitialVersion;
-
-            _events.Add(new BehaviorExecuted(_aggregateRootIdValue));
-
-            foreach (var @event in _events)
+        _mockEventStore
+            .Setup(m => m.SaveAsync(It.IsAny<IReadOnlyCollection<Event>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Returns((IReadOnlyCollection<Event> events, string _, CancellationToken _) =>
             {
-                @event.IncrementVersion(ref version);
-            }
-        }
+                foreach (var @event in events)
+                {
+                    _events.Add(@event);
+                }
 
-        [TearDown]
-        public void TearDown()
+                return Task.FromResult(0);
+            });
+    }
+
+    [SetUp]
+    public void SetUp()
+    {
+        var version = Constants.InitialVersion;
+
+        _events.Add(new BehaviorExecuted(_aggregateRootIdValue));
+
+        foreach (var @event in _events)
         {
-            _events.Clear();
-
-            _mockEventStore.Invocations.Clear();
+            @event.IncrementVersion(ref version);
         }
+    }
 
-        [Test]
-        public async Task GIVEN_aggregate_root_identifier_WHEN_getting_aggregate_root_THEN_returns_aggregate_root_in_its_correct_state()
-        {
-            // Arrange
-            var repository = new TestRepository(_mockFactory.Object, _mockEventStore.Object);
+    [TearDown]
+    public void TearDown()
+    {
+        _events.Clear();
 
-            // Act
-            await repository.GetByIdAsync(_aggregateRootIdValue);
+        _mockEventStore.Invocations.Clear();
+    }
 
-            // Assert
-            _mockEventStore.Verify(m => m.GetByAggregateRootIdAsync(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
-            _mockFactory.Verify(m => m.Create(), Times.Once());
-            _mockAggregateRoot.As<IAggregateRootBehavior>().Verify(m => m.RestoreFromStream(It.IsAny<IReadOnlyCollection<Event>>()), Times.Once());
-        }
+    [Test]
+    public async Task GIVEN_aggregate_root_identifier_WHEN_getting_aggregate_root_THEN_returns_aggregate_root_in_its_correct_state()
+    {
+        // Arrange
+        var repository = new TestRepository(_mockFactory.Object, _mockEventStore.Object);
 
-        [Test]
-        public async Task GIVEN_invalid_aggregate_root_identifier_WHEN_getting_aggregate_root_THEN_returns_null()
-        {
-            // Arrange
-            var repository = new TestRepository(_mockFactory.Object, _mockEventStore.Object);
+        // Act
+        await repository.GetByIdAsync(_aggregateRootIdValue);
 
-            // Act
-            var aggregateRoot = await repository.GetByIdAsync(Guid.Empty.ToString());
+        // Assert
+        _mockEventStore.Verify(m => m.GetByAggregateRootIdAsync(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
+        _mockFactory.Verify(m => m.Create(), Times.Once());
+        _mockAggregateRoot.As<IAggregateRootBehavior>().Verify(m => m.RestoreFromStream(It.IsAny<IReadOnlyCollection<Event>>()), Times.Once());
+    }
 
-            // Assert
-            aggregateRoot
-                .Should()
-                .BeNull();
+    [Test]
+    public async Task GIVEN_invalid_aggregate_root_identifier_WHEN_getting_aggregate_root_THEN_returns_null()
+    {
+        // Arrange
+        var repository = new TestRepository(_mockFactory.Object, _mockEventStore.Object);
 
-            _mockEventStore.Verify(m => m.GetByAggregateRootIdAsync(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
-        }
+        // Act
+        var aggregateRoot = await repository.GetByIdAsync(Guid.Empty.ToString());
 
-        [Test]
-        public async Task GIVEN_no_aggregate_root_WHEN_attempting_to_save_THEN_throws_AggregateRootNullException()
-        {
-            // Arrange
-            var repository = new TestRepository(_mockFactory.Object, _mockEventStore.Object);
+        // Assert
+        aggregateRoot
+            .Should()
+            .BeNull();
 
-            // Act
-            Func<Task> act = async () => await repository.SaveAsync(null);
+        _mockEventStore.Verify(m => m.GetByAggregateRootIdAsync(It.IsAny<string>(), It.IsAny<long>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
 
-            // Assert
-            await act
-                .Should()
-                .ThrowAsync<AggregateRootNullException>();
+    [Test]
+    public async Task GIVEN_no_aggregate_root_WHEN_attempting_to_save_THEN_throws_AggregateRootNullException()
+    {
+        // Arrange
+        var repository = new TestRepository(_mockFactory.Object, _mockEventStore.Object);
 
-            _mockEventStore.Verify(m => m.SaveAsync(It.IsAny<IReadOnlyCollection<Event>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never());
-        }
+        // Act
+        Func<Task> act = async () => await repository.SaveAsync(null);
 
-        [Test]
-        public async Task GIVEN_unchanged_aggregate_root_WHEN_attempting_to_save_THEN_returns_no_new_changes()
-        {
-            // Arrange
-            var repository = new TestRepository(_mockFactory.Object, _mockEventStore.Object);
+        // Assert
+        await act
+            .Should()
+            .ThrowAsync<AggregateRootNullException>();
 
-            var aggregateRoot = new TestAggregateRoot();
+        _mockEventStore.Verify(m => m.SaveAsync(It.IsAny<IReadOnlyCollection<Event>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never());
+    }
 
-            ((IAggregateRootBehavior)aggregateRoot).RestoreFromStream(_events.ToList());
+    [Test]
+    public async Task GIVEN_unchanged_aggregate_root_WHEN_attempting_to_save_THEN_returns_no_new_changes()
+    {
+        // Arrange
+        var repository = new TestRepository(_mockFactory.Object, _mockEventStore.Object);
 
-            // Act
-            var aggregateRootChanges = await repository.SaveAsync(aggregateRoot);
+        var aggregateRoot = new TestAggregateRoot();
 
-            // Assert
-            _mockEventStore.Verify(m => m.SaveAsync(It.IsAny<IReadOnlyCollection<Event>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never());
+        ((IAggregateRootBehavior)aggregateRoot).RestoreFromStream(_events.ToList());
 
-            aggregateRootChanges.Count
-                .Should()
-                .Be(0);
-        }
+        // Act
+        var aggregateRootChanges = await repository.SaveAsync(aggregateRoot);
 
-        [Test]
-        [AutoData]
-        public async Task GIVEN_changed_aggregate_root_WHEN_attempting_to_save_THEN_saves_aggregate_root_new_events(string serializedAggregateRootId)
-        {
-            // Arrange
-            var repository = new TestRepository(_mockFactory.Object, _mockEventStore.Object);
+        // Assert
+        _mockEventStore.Verify(m => m.SaveAsync(It.IsAny<IReadOnlyCollection<Event>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never());
 
-            var aggregateRootId = new TestAggregateRootId(serializedAggregateRootId);
-            var aggregateRoot = new TestAggregateRoot(aggregateRootId);
+        aggregateRootChanges.Count
+            .Should()
+            .Be(0);
+    }
 
-            aggregateRoot.ExecuteBehavior();
+    [Test]
+    [AutoData]
+    public async Task GIVEN_changed_aggregate_root_WHEN_attempting_to_save_THEN_saves_aggregate_root_new_events(string serializedAggregateRootId)
+    {
+        // Arrange
+        var repository = new TestRepository(_mockFactory.Object, _mockEventStore.Object);
 
-            // Act
-            var aggregateRootChanges = await repository.SaveAsync(aggregateRoot);
+        var aggregateRootId = new TestAggregateRootId(serializedAggregateRootId);
+        var aggregateRoot = new TestAggregateRoot(aggregateRootId);
 
-            // Assert
-            _mockEventStore.Verify(m => m.SaveAsync(It.IsAny<IReadOnlyCollection<Event>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
+        aggregateRoot.ExecuteBehavior();
 
-            aggregateRootChanges.Count
-                .Should()
-                .BeGreaterThan(0);
-        }
+        // Act
+        var aggregateRootChanges = await repository.SaveAsync(aggregateRoot);
+
+        // Assert
+        _mockEventStore.Verify(m => m.SaveAsync(It.IsAny<IReadOnlyCollection<Event>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once());
+
+        aggregateRootChanges.Count
+            .Should()
+            .BeGreaterThan(0);
     }
 }

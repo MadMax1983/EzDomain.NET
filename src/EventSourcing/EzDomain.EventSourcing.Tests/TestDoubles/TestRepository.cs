@@ -3,14 +3,13 @@ using EzDomain.EventSourcing.Domain.Factories;
 using EzDomain.EventSourcing.Domain.Model;
 using EzDomain.EventSourcing.Domain.Repositories;
 
-namespace EzDomain.EventSourcing.Tests.TestDoubles
+namespace EzDomain.EventSourcing.Tests.TestDoubles;
+
+internal sealed class TestRepository
+    : Repository<ITestAggregateRoot, IAggregateRootId>
 {
-    internal sealed class TestRepository
-        : Repository<ITestAggregateRoot, IAggregateRootId>
+    public TestRepository(IAggregateRootFactory<ITestAggregateRoot, IAggregateRootId> factory, IEventStore eventStore)
+        : base(factory, eventStore)
     {
-        public TestRepository(IAggregateRootFactory<ITestAggregateRoot, IAggregateRootId> factory, IEventStore eventStore)
-            : base(factory, eventStore)
-        {
-        }
     }
 }
