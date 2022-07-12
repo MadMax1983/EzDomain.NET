@@ -1,12 +1,11 @@
 using EzDomain.EventSourcing.Domain.Model;
 
-namespace EzDomain.EventSourcing.Tests.TestDoubles
+namespace EzDomain.EventSourcing.Tests.TestDoubles;
+
+internal interface ITestAggregateRoot
+    : IAggregateRoot<TestAggregateRootId>
 {
-    internal interface ITestAggregateRoot
-        : IAggregateRoot<TestAggregateRootId>
-    {
-        public void ExecuteBehavior();
+    public void ExecuteBehavior();
         
-        public void ExecuteUnhandledBehavior();
-    }
+    public void ExecuteUnhandledBehavior();
 }

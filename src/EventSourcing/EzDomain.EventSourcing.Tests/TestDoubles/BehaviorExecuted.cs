@@ -1,15 +1,14 @@
 using System.Diagnostics.CodeAnalysis;
 using EzDomain.EventSourcing.Domain.Model;
 
-namespace EzDomain.EventSourcing.Tests.TestDoubles
+namespace EzDomain.EventSourcing.Tests.TestDoubles;
+
+[ExcludeFromCodeCoverage]
+public sealed class BehaviorExecuted
+    : Event
 {
-    [ExcludeFromCodeCoverage]
-    public sealed class BehaviorExecuted
-        : Event
+    public BehaviorExecuted(string aggregateRootId)
+        : base(aggregateRootId)
     {
-        public BehaviorExecuted(string aggregateRootId)
-            : base(aggregateRootId)
-        {
-        }
     }
 }
