@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EzDomain.EventSourcing.Test
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messaging", "Messaging", "{FF4EB7EC-B3CD-48F7-ADAB-42A3CCFD491A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EzDomain.EventSourcing.EventStores.InMemory", "EventSourcing\EzDomain.EventSourcing.EventStores.InMemory\EzDomain.EventSourcing.EventStores.InMemory.csproj", "{121DA304-57CE-4A79-A889-F0C579737294}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EzDomain.EventSourcing.EventStores.InMemory.Tests", "EventSourcing\EzDomain.EventSourcing.EventStores.InMemory.Tests\EzDomain.EventSourcing.EventStores.InMemory.Tests.csproj", "{9DD3A059-021F-4B3F-95A5-5060CA4F1446}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,8 @@ Global
 		{CE219474-8C42-4E17-AD98-4650F6AC8A5A} = {8318F54C-CB81-4F0A-B3D1-B753F3CFA122}
 		{85BC6537-FC05-434D-951A-25854382B81E} = {8318F54C-CB81-4F0A-B3D1-B753F3CFA122}
 		{343D6B50-3DCB-45AF-8E62-C2D990DDC87F} = {8318F54C-CB81-4F0A-B3D1-B753F3CFA122}
+		{121DA304-57CE-4A79-A889-F0C579737294} = {8318F54C-CB81-4F0A-B3D1-B753F3CFA122}
+		{9DD3A059-021F-4B3F-95A5-5060CA4F1446} = {8318F54C-CB81-4F0A-B3D1-B753F3CFA122}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CE219474-8C42-4E17-AD98-4650F6AC8A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -33,5 +39,13 @@ Global
 		{343D6B50-3DCB-45AF-8E62-C2D990DDC87F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{343D6B50-3DCB-45AF-8E62-C2D990DDC87F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{343D6B50-3DCB-45AF-8E62-C2D990DDC87F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{121DA304-57CE-4A79-A889-F0C579737294}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{121DA304-57CE-4A79-A889-F0C579737294}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{121DA304-57CE-4A79-A889-F0C579737294}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{121DA304-57CE-4A79-A889-F0C579737294}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DD3A059-021F-4B3F-95A5-5060CA4F1446}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DD3A059-021F-4B3F-95A5-5060CA4F1446}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DD3A059-021F-4B3F-95A5-5060CA4F1446}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DD3A059-021F-4B3F-95A5-5060CA4F1446}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
